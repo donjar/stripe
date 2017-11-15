@@ -41,9 +41,18 @@ class UnitDiskGraph
   def color
     min_coloring = nil
     vertices.permutation.each do |permutation|
-      coloring = {}
+      coloring = sequential_color(permutation)
+      if min_coloring.nil? || coloring.values.max < min_coloring.values.max
+        min_coloring = coloring
+      end
+    end
 
-      permutation.each do |vertex|
+    min_coloring
+  end
+
+  def sequential_color(vertex_ordering)
+    {}.tap do |coloring|
+      vertex_ordering.each do |vertex|
         filled = Array.new(vertices.length, false)
         @adjacency_list[vertex].each do |neighbor|
           next unless coloring.include?(neighbor)
@@ -52,13 +61,7 @@ class UnitDiskGraph
 
         coloring[vertex] = filled.index(false)
       end
-
-      if min_coloring.nil? || coloring.values.max < min_coloring.values.max
-        min_coloring = coloring
-      end
     end
-
-    min_coloring
   end
 
   private def vertices
