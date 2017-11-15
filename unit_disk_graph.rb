@@ -26,8 +26,6 @@ class UnitDiskGraph
   end
 
   def stripe_partition(width)
-    vertices = @adjacency_list.keys
-
     x_coords = vertices.map(&:x)
     min_x = x_coords.min
     max_x = x_coords.max
@@ -38,5 +36,32 @@ class UnitDiskGraph
         vertex_groups[pos] << v
       end
     end
+  end
+
+  def color
+    min_coloring = nil
+    vertices.permutation.each do |permutation|
+      coloring = {}
+
+      permutation.each do |vertex|
+        filled = Array.new(vertices.length, false)
+        @adjacency_list[vertex].each do |neighbor|
+          next unless coloring.include?(neighbor)
+          filled[coloring[neighbor]] = true
+        end
+
+        coloring[vertex] = filled.index(false)
+      end
+
+      if min_coloring.nil? || coloring.values.max < min_coloring.values.max
+        min_coloring = coloring
+      end
+    end
+
+    min_coloring
+  end
+
+  private def vertices
+    @adjacency_list.keys
   end
 end
