@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require './mohring'
+
 class UnitDiskGraph
   attr_reader :adjacency_list
 
@@ -39,15 +41,11 @@ class UnitDiskGraph
   end
 
   def color
-    min_coloring = nil
-    vertices.permutation.each do |permutation|
-      coloring = sequential_color(permutation)
-      if min_coloring.nil? || coloring.values.max < min_coloring.values.max
-        min_coloring = coloring
-      end
+    lex_ordering = vertices.sort do |a, b|
+      a.x == b.x ? a.y <=> b.y : a.x <=> b.x
     end
-
-    min_coloring
+    initial = sequential_color(lex_ordering)
+    Mohring.optimise(initial)
   end
 
   def sequential_color(vertex_ordering)

@@ -23,4 +23,12 @@ class Vertex
   def eql?(other)
     self == other
   end
+
+  def to_s
+    "(#{@x}, #{@y})"
+  end
+
+  def inspect
+    to_s
+  end
 end
