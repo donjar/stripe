@@ -51,6 +51,17 @@ class UnitDiskGraph
     Mohring.optimise(lexicographic_color, @radius)
   end
 
+  def stripe_color(width)
+    raise 'Invalid width' unless width <= Math.sqrt(3) / 2
+
+    partitions = stripe_partition(width)
+    partitions.each do |p|
+      u = UnitDiskGraph.new(@radius)
+      p.each { |v| u.add_vertex(v) }
+      u.mohring_color
+    end
+  end
+
   def sequential_color(vertex_ordering)
     {}.tap do |coloring|
       vertex_ordering.each do |vertex|
