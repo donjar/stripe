@@ -126,7 +126,7 @@ module Mohring
         neighbors = @adjacency_list[v]
 
         neighbors.each do |n, f|
-          if f.amount > 0 && !visited.include?(n)
+          if f.amount.positive? && !visited.include?(n)
             stack.push(Array.new(path) << n)
           end
         end

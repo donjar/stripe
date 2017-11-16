@@ -44,7 +44,7 @@ class UnitDiskGraph
     lex_ordering = vertices.sort do |a, b|
       a.x == b.x ? a.y <=> b.y : a.x <=> b.x
     end
-    initial = sequential_color(lex_ordering)
+    sequential_color(lex_ordering)
   end
 
   def mohring_color

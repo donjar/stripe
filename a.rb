@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './unit_disk_graph'
 require './vertex'
 
