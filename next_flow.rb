@@ -9,6 +9,6 @@ class NextFlow
   end
 
   def overloaded?
-    @amount >= @bound
+    @amount > @bound
   end
 end

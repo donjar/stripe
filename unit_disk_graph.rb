@@ -40,12 +40,15 @@ class UnitDiskGraph
     end
   end
 
-  def color
+  def lexicographic_color
     lex_ordering = vertices.sort do |a, b|
       a.x == b.x ? a.y <=> b.y : a.x <=> b.x
     end
     initial = sequential_color(lex_ordering)
-    Mohring.optimise(initial)
+  end
+
+  def mohring_color
+    Mohring.optimise(lexicographic_color, @radius)
   end
 
   def sequential_color(vertex_ordering)

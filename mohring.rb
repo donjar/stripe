@@ -6,10 +6,11 @@ require 'set'
 module Mohring
   extend self
 
-  def optimise(coloring)
+  def optimise(coloring, radius)
     @coloring = coloring
     @adjacency_list = {}
     @vertices = coloring.keys
+    @radius = radius
 
     construct_network
     construct_flow
@@ -23,8 +24,8 @@ module Mohring
       @adjacency_list["#{vertex}-out"] = @vertices.inject({}) do |accum, curr|
         # Don't connect if:
         # - curr is lower than vertex in terms of y coordinates
-        # - distance <= 1
-        next accum if curr.y <= vertex.y || curr.distance_to(vertex) <= 1
+        # - distance <= radius
+        next accum if curr.y <= vertex.y || curr.distance_to(vertex) <= @radius
         accum.tap { |a| a["#{curr}-in"] = NextFlow.new(amount: 0, bound: 0) }
       end
 
@@ -113,7 +114,9 @@ module Mohring
         if v == 'sink'
           decrease_flow(path)
           path.each do |path_vertex|
-            coloring[path_vertex] = color_number
+            if (match = path_vertex.match(/\((.*), (.*)\)-in/))
+              coloring[Vertex.new(match[1], match[2])] = color_number
+            end
           end
 
           color_number += 1
